@@ -5,12 +5,14 @@ using UnityEngine;
 public class GwenMovement : MonoBehaviour
 {
     Rigidbody2D rb;
+    Animator anim;
     float movementX, movementY;
     [SerializeField]float speed;
     // Start is called before the first frame update
     void Start()
     {
         rb = this.GetComponent<Rigidbody2D>();
+        anim=this.GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -23,6 +25,41 @@ public class GwenMovement : MonoBehaviour
     private void FixedUpdate() 
     {
         Vector2 movementVector = new Vector2(movementX, movementY);
-        rb.MovePosition(rb.position + movementVector * Time.deltaTime * speed);
+        rb.MovePosition(rb.position + movementVector * Time.fixedDeltaTime * speed);
+        AdjustAnimation();
+    }
+
+    public void AdjustAnimation(){
+        //logic for setting idle you'll end on
+        /*if(movementX!=0){
+            anim.SetBool("LastMovedHorizontal", true);
+        }
+        else if(movementX == 0){
+            anim.SetBool("LastMovedHorizontal", false);
+        }
+        else if(movementY!=0){
+            anim.SetBool("LastMovedVertical",true);
+        }
+        else if(movementY == 0){
+            anim.SetBool("LastMovedVertical", false);
+        }*/
+
+        //logic for determining idle
+        anim.SetFloat("Horizontal", movementX);
+        anim.SetFloat("Vertical", movementY);
+        if(movementX != 0 | movementY != 0){
+            anim.SetBool("isMoving", true);
+            if(movementY != 0){
+                anim.SetBool("LastMovedVertical", true);
+                anim.SetBool("LastMovedHorizontal", false);
+            }
+            else{
+                anim.SetBool("LastMovedHorizontal", true);
+                anim.SetBool("LastMovedVertical", false);
+            }
+        }
+        else{
+            anim.SetBool("isMoving", false);
+        }
     }
 }
