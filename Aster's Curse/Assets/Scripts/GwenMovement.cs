@@ -29,7 +29,7 @@ public class GwenMovement : MonoBehaviour
         AdjustAnimation();
     }
 
-    public void AdjustAnimation(){
+    void AdjustAnimation(){
         //logic for setting idle you'll end on
         /*if(movementX!=0){
             anim.SetBool("LastMovedHorizontal", true);
@@ -49,14 +49,8 @@ public class GwenMovement : MonoBehaviour
         anim.SetFloat("Vertical", movementY);
         if(movementX != 0 | movementY != 0){
             anim.SetBool("isMoving", true);
-            if(movementY != 0){
-                anim.SetBool("LastMovedVertical", true);
-                anim.SetBool("LastMovedHorizontal", false);
-            }
-            else{
-                anim.SetBool("LastMovedHorizontal", true);
-                anim.SetBool("LastMovedVertical", false);
-            }
+            anim.SetFloat("LastMovedX", movementX);
+            anim.SetFloat("LastMovedY", movementY);
         }
         else{
             anim.SetBool("isMoving", false);
