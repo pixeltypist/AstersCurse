@@ -6,10 +6,12 @@ public class GwenAttack : MonoBehaviour
 {
     // the thing stopping the animation is keyed into the animation itself by an event
     Animator anim;
-    Vector2 throwPoint;
+    Vector2 aimedPoint;
+    [SerializeField]Transform throwPoint;
     [SerializeField]GameObject potion;
     [SerializeField]float potionRange;
     [SerializeField]Camera cam;
+    public Vector2 potionAimedPoint;
     bool throwingPotion;
     // Start is called before the first frame update
     void Start()
@@ -26,16 +28,15 @@ public class GwenAttack : MonoBehaviour
     }
 
     void ThrowPotion(){
-        print("Entered ThrowPotion()");
         anim.SetBool("isAttacking", true);
-        throwPoint = cam.ScreenToWorldPoint(Input.mousePosition); 
-        throwPoint.Normalize();
-        anim.SetFloat("MouseX", throwPoint.x);
-        anim.SetFloat("LastMovedX", throwPoint.x);
-        anim.SetFloat("MouseY", throwPoint.y);
-        anim.SetFloat("LastMovedY", throwPoint.y);
+        aimedPoint = cam.ScreenToWorldPoint(Input.mousePosition); 
+        potionAimedPoint = aimedPoint;
+        aimedPoint.Normalize();
+        anim.SetFloat("MouseX", aimedPoint.x);
+        anim.SetFloat("LastMovedX", aimedPoint.x);
+        anim.SetFloat("MouseY", aimedPoint.y);
+        anim.SetFloat("LastMovedY", aimedPoint.y);
         throwingPotion = true;
-
     }
 
     public void FinishAttack(){
@@ -43,8 +44,9 @@ public class GwenAttack : MonoBehaviour
         if (throwingPotion){
             //figure out which point to use
             //Instatiate potion at that point.
-
-            //set throwingPotion to false            
+            UsePotion pot = Instantiate(potion, throwPoint.position, Quaternion.identity).GetComponent<UsePotion>();
+            pot.GetComponent<UsePotion>().PassPotionTarget(potionAimedPoint);
+            throwingPotion = false;           
         }
     }
 }
